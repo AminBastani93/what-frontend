@@ -1,38 +1,16 @@
-# Use the Node.js official image as a base image
-FROM node:18-alpine AS base
-
-# Set working directory inside the container
-WORKDIR /usr/src/app
-
-# Copy package files and install dependencies
-COPY package.json package-lock.json ./ 
-RUN npm install
-
-# Copy the rest of the application code
+FROM oven/bun:debian AS installer
+WORKDIR /app
+COPY package.json bun.lockb ./
+RUN bun i
 COPY . .
 
-# Build the Next.js app
-RUN npm run build
-
-# Use a minimal runtime image to serve the built app
-FROM node:18-alpine AS production
-
-# Install only production dependencies
-WORKDIR /usr/src/app
-COPY package.json package-lock.json ./
-RUN npm install --production
-
-# Copy built files from the build stage
-COPY --from=base /usr/src/app/.next ./.next
-COPY --from=base /usr/src/app/public ./public
-COPY --from=base /usr/src/app/next.config.js ./
-
-# Set environment variables (adjust as needed)
+FROM installer AS builder
+WORKDIR /app
+COPY --from=installer /app/node_modules ./node_modules
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV=production
-ENV PORT=3001
-
-# Expose the port the app runs on
+RUN bun run build
 EXPOSE 3001
-
-# Run the Next.js app
-CMD ["npm", "start"]
+ENV PORT 3001
+CMD bun run start
