@@ -49,13 +49,18 @@ const Login = () => {
             {contextHolder}
             <Flex
                 style={{
+                    maxWidth: "100%",
                     padding: 24,
                     minHeight: "100vh",
                 }}
                 justify={"center"}
                 align={"center"}
             >
-                <Card>
+                <Card
+                    style={{
+                        maxWidth: "100%",
+                    }}
+                >
                     <Flex
                         style={{ fontSize: "2rem", marginBottom: "24px" }}
                         justify="center"
@@ -66,7 +71,6 @@ const Login = () => {
                         name="basic"
                         labelCol={{ span: 10 }}
                         wrapperCol={{ span: 14 }}
-                        style={{ minWidth: 400 }}
                         initialValues={{ remember: true }}
                         onFinish={onFinish}
                         autoComplete="off"
