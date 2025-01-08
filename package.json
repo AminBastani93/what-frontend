@@ -1,5 +1,5 @@
 {
-    "name": "what frontend",
+    "name": "what-frontend",
     "version": "0.1.0",
     "private": true,
     "scripts": {
@@ -16,7 +16,8 @@
         "next": "14.1.3",
         "next-runtime-env": "3.x",
         "nookies": "^2.5.2",
-        "react": "^18"
+        "react": "^18",
+        "react-dom": "^18"
     },
     "devDependencies": {
         "@types/node": "^20",

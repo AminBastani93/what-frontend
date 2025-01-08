@@ -51,6 +51,11 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
                                                         "access_token",
                                                         cookie_options
                                                     );
+                                                    localStorage.removeItem(
+                                                        "selectedRows"
+                                                    );
+                                                    localStorage.removeItem("searchTerm");
+                                                    localStorage.removeItem("products");
                                                     router.push(`/login`);
                                                 }}
                                             >
