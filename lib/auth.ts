@@ -1,6 +1,7 @@
-import { jwtVerify, JWTPayload, decodeJwt, SignJWT } from "jose";
+import { jwtVerify, JWTPayload } from "jose";
 import { env } from "next-runtime-env";
 
+// Get the JWT secret key from the environment variables
 export function getJwtSecretKey() {
     const secret = env("JWT_SECRET");
 
@@ -12,6 +13,7 @@ export function getJwtSecretKey() {
     return enc;
 }
 
+// Verify the JWT token
 export async function verifyJwtToken(token: string): Promise<JWTPayload | null> {
     try {
         const { payload } = await jwtVerify(token, getJwtSecretKey());

@@ -11,10 +11,13 @@ import { decodeJwt } from "jose";
 const { Header, Content } = Layout;
 
 const RootLayout = ({ children }: React.PropsWithChildren) => {
+    // State for storing user's email
     const [userEmail, setUserEmail] = useState<string>("");
 
+    // Router instance for navigation
     const router = useRouter();
 
+    // Function to retrieve user information from the access token
     const getUserInfo = () => {
         const cookies = parseCookies();
         const token = cookies["access_token"];
@@ -22,11 +25,13 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
         setUserEmail(email);
     };
 
+    // Call getUserInfo on component mount
     useEffect(() => {
         getUserInfo();
     }, []);
 
     return (
+        // Main layout container
         <Layout style={{ minHeight: "100vh" }}>
             <Header
                 style={{

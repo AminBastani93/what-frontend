@@ -4,6 +4,7 @@ import { ConfigProvider } from "antd";
 import "@/assets/css/main.css";
 import { PublicEnvScript } from "next-runtime-env";
 
+// Define the metadata for the page, including the title and icons
 export const metadata = {
     title: "What!",
     icons: {
@@ -11,6 +12,7 @@ export const metadata = {
     },
 };
 
+// The RootLayout component, which wraps the entire application
 const RootLayout = ({ children }: React.PropsWithChildren) => {
     return (
         <html lang="en">

@@ -1,4 +1,5 @@
 "use client";
+// Import necessary dependencies
 import { productsSearch } from "@/helpers/api";
 import { Card, Flex, Input, message, Table } from "antd";
 import { useState, useEffect } from "react";
@@ -6,12 +7,14 @@ import { SearchOutlined } from "@ant-design/icons";
 import type { TableProps } from "antd";
 
 const Dashboard = () => {
+    // Initialize state management hooks
     const [messageApi, contextHolder] = message.useMessage();
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(false);
     const [products, setProducts] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
+    // Load saved state from localStorage on component mount
     useEffect(() => {
         if (typeof window !== "undefined") {
             const savedSearchTerm = localStorage.getItem("searchTerm");
@@ -24,6 +27,7 @@ const Dashboard = () => {
         }
     }, []);
 
+    // Handle product search API call
     const handleSearch = async (value: string) => {
         setLoading(true);
         const response = await productsSearch("?search=" + value);
@@ -32,11 +36,13 @@ const Dashboard = () => {
         setLoading(false);
     };
 
+    // Debounced search effect
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             if (searchTerm) {
                 handleSearch(searchTerm);
             } else {
+                // Clear data when search is empty
                 localStorage.removeItem("products");
                 localStorage.removeItem("selectedRows");
                 setSelectedRowKeys([]);
@@ -44,9 +50,11 @@ const Dashboard = () => {
             }
         }, 500);
 
+        // Cleanup timeout on component unmount or searchTerm change
         return () => clearTimeout(delayDebounceFn);
     }, [searchTerm]);
 
+    // Table column definitions with sorting
     const columns: TableProps["columns"] = [
         {
             title: "ID",
@@ -70,7 +78,7 @@ const Dashboard = () => {
             title: "Price",
             dataIndex: "price",
             key: "price",
-            render: (price: string) => `$${price}`,
+            render: (price: string) => `${price}`,
             sorter: (a, b) => parseFloat(a.price) - parseFloat(b.price),
         },
         {
@@ -81,6 +89,7 @@ const Dashboard = () => {
         },
     ];
 
+    // Row selection configuration
     const rowSelection = {
         selectedRowKeys,
         onChange: (selected: React.Key[]) => {
@@ -89,11 +98,13 @@ const Dashboard = () => {
         },
     };
 
+    // Render dashboard component
     return (
         <>
             {contextHolder}
             <Card title="Products">
                 <Flex vertical gap="large">
+                    {/* Search input with persistence */}
                     <Input
                         prefix={<SearchOutlined />}
                         size="large"
@@ -104,6 +115,7 @@ const Dashboard = () => {
                             setSearchTerm(e.target.value);
                         }}
                     />
+                    {/* Products table with selection and horizontal scroll */}
                     <Table
                         rowSelection={rowSelection}
                         pagination={false}

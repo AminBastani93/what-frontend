@@ -8,17 +8,24 @@ import { login } from "@/helpers/api";
 import { setCookie } from "nookies";
 import { cookie_options } from "@/helpers/helpers";
 
+// The Login component, which renders the login form
 const Login = () => {
+    // Create a message context holder for displaying messages
     const [messageApi, contextHolder] = message.useMessage();
 
+    // Create a loading state for the login button
     const [loading, setLoading] = useState(false);
 
+    // Create a router object for navigation
     const router = useRouter();
 
+    // Get the search parameters from the URL
     const searchParams = useSearchParams();
 
+    // Get the redirect parameter from the search parameters
     const redirect = searchParams.get("redirect");
 
+    // Define the onFinish function for the form
     const onFinish: FormProps<LoginType>["onFinish"] = async (values) => {
         setLoading(true);
         const res = await login({
