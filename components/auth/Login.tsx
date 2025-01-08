@@ -3,11 +3,10 @@ import React, { useState } from "react";
 import type { FormProps } from "antd";
 import { Button, Card, Flex, Form, Input, message } from "antd";
 import { useSearchParams, useRouter } from "next/navigation";
-
-type FieldType = {
-    username: string;
-    pass: string;
-};
+import { LoginType } from "@/helpers/apiTypes";
+import { login } from "@/helpers/api";
+import { setCookie } from "nookies";
+import { cookie_options } from "@/helpers/helpers";
 
 const Login = () => {
     const [messageApi, contextHolder] = message.useMessage();
@@ -20,7 +19,23 @@ const Login = () => {
 
     const redirect = searchParams.get("redirect");
 
-    const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {};
+    const onFinish: FormProps<LoginType>["onFinish"] = async (values) => {
+        setLoading(true);
+        const res = await login({
+            email: values.email,
+            password: values.password,
+        });
+        setLoading(false);
+        if (res.status == 500) {
+            messageApi.error("Server not available.");
+        } else if (res.status == 400) {
+            messageApi.error(res.data.error);
+        } else {
+            messageApi.success("Login successfully.");
+            setCookie(null, "access_token", res.data.access, cookie_options);
+            redirect ? router.push(redirect) : router.push("/dashboard");
+        }
+    };
 
     return (
         <>
@@ -49,22 +64,22 @@ const Login = () => {
                         onFinish={onFinish}
                         autoComplete="off"
                     >
-                        <Form.Item<FieldType>
-                            label="Email or phone"
-                            name="username"
+                        <Form.Item<LoginType>
+                            label="Email"
+                            name="email"
                             rules={[
                                 {
                                     required: true,
-                                    message: "Please input your email or phone!",
+                                    message: "Please input your email!",
                                 },
                             ]}
                         >
                             <Input />
                         </Form.Item>
 
-                        <Form.Item<FieldType>
+                        <Form.Item<LoginType>
                             label="Password"
-                            name="pass"
+                            name="password"
                             rules={[
                                 {
                                     required: true,

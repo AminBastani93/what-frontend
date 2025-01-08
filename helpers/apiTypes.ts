@@ -1,4 +1,4 @@
 export type LoginType = {
-    username: string;
-    pass: string;
+    email: string;
+    password: string;
 };

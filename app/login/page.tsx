@@ -1,11 +1,13 @@
 import React from "react";
 import Login from "@/components/auth/Login";
 import { formatTitle } from "@/helpers/helpers";
+
 export const metadata = {
     title: formatTitle("Login"),
 };
-const Home = () => {
+
+const LoginPage = () => {
     return <Login />;
 };
 
-export default Home;
+export default LoginPage;
