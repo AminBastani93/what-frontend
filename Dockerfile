@@ -1,16 +1,25 @@
-FROM oven/bun:debian AS installer
-WORKDIR /app
-COPY package.json bun.lockb ./
-RUN bun i
+# Use the Node.js official image as a base image
+FROM docker.arvancloud.ir/node:18-alpine AS base
+
+# Set working directory inside the container
+WORKDIR /usr/src/app
+
+# Copy package files and install dependencies
+COPY package.json package-lock.json ./ 
+RUN npm install
+
+# Copy the rest of the application code
 COPY . .
 
-FROM installer AS builder
-WORKDIR /app
-COPY --from=installer /app/node_modules ./node_modules
-COPY . .
-ENV NEXT_TELEMETRY_DISABLED 1
+# Build the Next.js app
+RUN npm run build
+
+# Set environment variables (adjust as needed)
 ENV NODE_ENV=production
-RUN bun run build
+ENV PORT=3001
+
+# Expose the port the app runs on
 EXPOSE 3001
-ENV PORT 3001
-CMD bun run start
+
+# Run the Next.js app
+CMD ["npm", "start"]
