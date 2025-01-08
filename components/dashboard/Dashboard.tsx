@@ -111,7 +111,7 @@ const Dashboard = () => {
                         placeholder="Search"
                         value={searchTerm}
                         onChange={(e) => {
-                            localStorage.setItem("searchTerm", searchTerm);
+                            localStorage.setItem("searchTerm", e.target.value);
                             setSearchTerm(e.target.value);
                         }}
                     />
